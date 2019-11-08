@@ -47,24 +47,33 @@ Boot2MainStart:
 	je		Boot2Cannot
 
 	mov		cx, 1   					; Read 1 Sector
-	mov		ax, 1
-	mov		bx, 0D000h
+	mov		ax, 1						; Read Sector 1
+	mov		bx, 0D000h					; Load Sector Data in to Address
+	call 	ReadSectors
+	cmp		di, 0						; Check if Sector Read Failed
+	je		SectorCannotBeReadErr
 
+	mov		dl, byte[0D000h]
+
+	call	Write_Value_Of_BX_Hex
 
 	jmp		Switch_To_Protected_Mode
+
+SectorCannotBeReadErr:
+	mov		si, sector_failed_to_read
+	call 	Console_WriteLine_16
+	jmp		WarmBoot
 
 GenericErr:
 	mov		si, generic_err
 	call 	Console_WriteLine_16
-	mov 	ah, 0
-	int  	16h							; Wait for Key Press
-	int		19h							; Warm boot computer
-	hlt
-
+	jmp		WarmBoot
 
 Boot2Cannot:
 	mov		si, boot_2_wait_for_key
 	call 	Console_WriteLine_16
+
+WarmBoot:
 	mov 	ah, 0
 	int  	16h							; Wait for Key Press
 	int		19h							; Warm boot computer

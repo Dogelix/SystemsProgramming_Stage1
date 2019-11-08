@@ -40,8 +40,6 @@ Console_WriteLine_16:
 hex_chars	db '0123456789ABCDEF'
 
 Write_Value_Of_BX_Hex:
-	mov 	si, bx_val_hex_msg
-	call	Console_Write_16
 	mov		cx, 4
 	mov 	ah, 0Eh
 
