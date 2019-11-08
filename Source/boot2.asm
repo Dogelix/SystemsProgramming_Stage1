@@ -47,16 +47,14 @@ Boot2MainStart:
 	je		Boot2Cannot
 
 	mov		cx, 1   					; Read 1 Sector
-	mov		ax, 1						; Read Sector 1
+	mov		ax, 0						; Read Sector 0
 	mov		bx, 0D000h					; Load Sector Data in to Address
 	call 	ReadSectors
 	cmp		di, 0						; Check if Sector Read Failed
 	je		SectorCannotBeReadErr
 
-	mov		dl, byte[0D000h]
-
 	call	Write_Value_Of_BX_Hex
-
+	
 	jmp		Switch_To_Protected_Mode
 
 SectorCannotBeReadErr:
@@ -81,39 +79,7 @@ WarmBoot:
 
 Switch_To_Protected_Mode:
 	hlt
-	
-val_to_print: 			  db 0
 
 ; Pad out the boot stage 2 so that it will be exactly 3584 (7 * 512) bytes
 	times 3584 - ($ - $$) db 0
-
-
-; Example C version of user input
-; The am/pm example from class.
-; Demonstrates:
-;       string input via BIOS
-;       basic use of subroutines
-;       branches
-;
-; Algorithm:
-;       int main(void)
-;       {
-;           char prompt[] = "am or pm? ";
-;           char am[] = "Good morning!\n";
-;           char pm[] = "Good afternoon!\n";
-;           char answer[20];
-;
-;           printf(prompt);
-;           scanf("%20s", answer);
-;           if (answer[0] == 'a')
-;               printf(am);
-;           else
-;               printf(pm);
-;           return 0;
-;       }
-;
-; Assemble as:
-;   nasm  -f bin  -o ampm.com  ampmExample.asm
-;
-; 2005-10-25
 
