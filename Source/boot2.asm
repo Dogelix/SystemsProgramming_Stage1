@@ -57,6 +57,11 @@ Boot2MainStart:
 
 	mov 	bx, SECTOR_SAVE_LOC			; Move the bx back to the start of the loaded sector
 	call	DisplaySector
+
+	call 	Console_Write_CRLF
+
+	mov 	si, sector_read_prompt
+	call	Console_Write_16
 	
 	jmp		Switch_To_Protected_Mode
 
