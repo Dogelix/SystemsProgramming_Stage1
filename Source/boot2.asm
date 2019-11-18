@@ -7,6 +7,11 @@ ORG 9000h
 Start:
 	jmp Boot2MainStart ; Jump past Stage 2 Subroutines
 
+; This is the real mode address where we will initially load the kernel
+%define	KERNEL_RMODE_SEG		1000h
+%define KERNEL_RMODE_OFFSET		0000h
+%define SECTOR_SAVE_LOC			0D000h
+
 ; Have includes here
 ; Sub Routines
 %include "bpb.asm"						; A copy of the BIOS Parameter Block (i.e. information about the disk format)
@@ -16,11 +21,6 @@ Start:
 %include "sectorDisplayFunctions_16.asm"
 %include "a20.asm"
 %include "messages.asm"
-
-; This is the real mode address where we will initially load the kernel
-%define	KERNEL_RMODE_SEG		1000h
-%define KERNEL_RMODE_OFFSET		0000h
-%define SECTOR_SAVE_LOC			0D000h
 
 ; Kernel name (Must be a 8.3 filename and must be 11 bytes exactly)
 ImageName     db "KERNEL  SYS"

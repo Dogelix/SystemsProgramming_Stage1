@@ -10,6 +10,12 @@ Console_Write_CRLF:
     int 	10h
     ret
 
+Console_Write_Space:
+	mov		al, 32
+    mov 	ah, 0Eh
+	int 	10h
+	ret
+
 ; Write to the console using BIOS.
 ; 
 ; Input: SI points to a null-terminated string
@@ -39,18 +45,19 @@ Console_WriteLine_16:
 
 hex_chars	db '0123456789ABCDEF'
 
-Write_Value_Of_BX_Hex:
+Write_Value_Of_DX_Hex:
 	mov		cx, 4
 	mov 	ah, 0Eh
 
-Write_Value_Of_BX_Hex_Loop:
-	rol 	bx, 4
-	mov		si, bx
+Write_Value_Of_DX_Hex_Loop:
+	rol 	dx, 4
+	mov		si, dx
 	and		si, 000Fh
 	mov		al, byte [si + hex_chars]
 	int 	10h
-	loop 	Write_Value_Of_BX_Hex_Loop
-	call 	Console_Write_CRLF
+	loop 	Write_Value_Of_DX_Hex_Loop
+	;mov		si, spacer
+	;call	Console_Write_16
 	ret
 
 Write_Value_Of_BX_Int:
