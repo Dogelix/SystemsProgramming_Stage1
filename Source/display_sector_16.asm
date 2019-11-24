@@ -48,9 +48,9 @@ DisplaySector_Loop:
 
 
 DisplaySector_Ret:
-    pop     ax
-    pop     cx
     pop     dx
+    pop     cx
+    pop     ax
     ret
 
 DisplayChars:
