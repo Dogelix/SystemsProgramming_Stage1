@@ -56,12 +56,10 @@ Write_Value_Of_DX_Hex_Loop:
 	mov		al, byte [si + hex_chars]
 	int 	10h
 	loop 	Write_Value_Of_DX_Hex_Loop
-	;mov		si, spacer
-	;call	Console_Write_16
 	ret
 
 Write_Value_Of_BX_Int:
-	mov 	si, buffer  ; Load the buffer in to memory 
+	mov 	si, buffer + 4  ; Load the buffer in to memory 
 	mov 	ax, bx		; Move the value of bx to ax
 
 Write_Value_Of_BX_Int_Loop:

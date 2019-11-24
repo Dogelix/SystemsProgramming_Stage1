@@ -16,11 +16,12 @@ Start:
 ; Sub Routines
 %include "bpb.asm"						; A copy of the BIOS Parameter Block (i.e. information about the disk format)
 %include "floppy16.asm"					; Routines to access the floppy disk drive
-%include "fat12.asm"					; Routines to handle the FAT12 file system
 %include "functions_16.asm"
-%include "sectorDisplayFunctions_16.asm"
+%include "display_sector_16.asm"
 %include "a20.asm"
 %include "messages.asm"
+%include "user_input.asm"
+%include "conversion_16.asm"
 
 ; Kernel name (Must be a 8.3 filename and must be 11 bytes exactly)
 ImageName     db "KERNEL  SYS"
@@ -47,22 +48,32 @@ Boot2MainStart:
 	cmp		dx, 0
 	je		Boot2Cannot
 
-	mov		cx, 1   					; Read 1 Sector
-	mov		ax, 0						; Read Sector 0
+	mov 	si, sector_count_prompt 
+	call	Console_WriteLine_16
+	call 	Get_Input
+	
+	call 	Convert_ASCII_to_Int
+	mov		bx, cx
+
+	mov 	si, sector_read_prompt
+	call	Console_WriteLine_16
+	call	Get_Input
+	call	Convert_ASCII_to_Int
+
+	mov		ax, cx
+	mov		cx, bx
+					
+	xor		bx, bx						; Zero off the value in bx
 	mov		bx, SECTOR_SAVE_LOC			; Load Sector Data in to Address
 	call 	ReadSectors
 
 	cmp		di, 0						; Check if Sector Read Failed
 	je		SectorCannotBeReadErr
-
 	mov 	bx, SECTOR_SAVE_LOC			; Move the bx back to the start of the loaded sector
+	
+Boot2DisplaySector:
 	call	DisplaySector
 
-	call 	Console_Write_CRLF
-
-	mov 	si, sector_read_prompt
-	call	Console_Write_16
-	
 	jmp		Switch_To_Protected_Mode
 
 SectorCannotBeReadErr:

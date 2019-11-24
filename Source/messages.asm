@@ -8,8 +8,11 @@ generic_err:                db  'Error', 0
 
 a20_start_message:		    db	'A20 Checks Start', 0
 
-sector_read_prompt:         db 'What sector would you like to read?: ', 0
+sector_read_prompt:         db 'What sector would you like to read from?: ', 0
 
+sector_count_prompt:         db 'How many sectors would you like to read?: ', 0
+
+next_section_msg             db 'Press any key to continue...', 0
 
 ; A20 Debug message array 
 a20_debug_msgs: 		    dw a20_fail_message, a20_1_message, a20_2_message, a20_3_message, a20_4_message
